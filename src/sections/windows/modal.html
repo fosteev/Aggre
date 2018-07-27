@@ -1,0 +1,91 @@
+<style>
+    body {
+        font-family: system, -apple-system, '.SFNSText-Regular', 'SF UI Text', 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
+        color: #fff;
+        background-color: #8aba87;
+        text-align: center;
+        font-size: 40px;
+    }
+
+    h2 {
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    #close {
+        color: white;
+        opacity: 0.7;
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        text-decoration: none;
+    }
+
+    .main {
+        display: flex;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .ui.input {
+        margin: 10px;
+    }
+
+</style>
+
+<link rel="stylesheet" type="text/css" href="../../../semantic/dist/semantic.min.css">
+<link rel="stylesheet" type="text/css" href="../../css/main.css">
+
+<div class="main">
+    <div class="ui labeled input">
+        <div class="ui label">
+            Name
+        </div>
+        <input id="name" type="text" placeholder="Example">
+    </div>
+
+    <div class="ui labeled input">
+        <div class="ui label">
+            URL
+        </div>
+        <input id="url" type="text" placeholder="example.com">
+    </div>
+
+    <button id="save-btn" class="ui primary button">
+        <i class="plus icon"></i>
+        Save
+    </button>
+</div>
+
+
+
+<a id="close" href="javascript:window.close()">Close this Window</a>
+
+<script>
+    const jQuery = require('jquery')
+    const $ = jQuery
+    require('../../../semantic/dist/semantic.min.js')
+
+
+    $('#save-btn').click(() => {
+        let tabs = JSON.parse(localStorage.getItem('tabs'));
+        tabs.push({
+            name: $('#name').val(),
+            src: $('#url').val()
+        });
+        localStorage.setItem('tabs', JSON.stringify(tabs));
+
+        const remote = require('electron').remote;
+        remote.app.relaunch();
+        remote.app.exit(0);
+
+        window.close();
+    })
+</script>

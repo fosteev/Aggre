@@ -1,19 +1,117 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <title>Aggre</title>
+</head>
+<link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+<link rel="stylesheet" type="text/css" href="src/css/main.css">
+<body>
+<!--<webview id="foo" src="https://play.google.com/music/listen#/home" style="display:inline-flex; width:100%; height:100vh"></webview>-->
 
-    <script>
-      // You can also require other files to run in this process
-      require('./renderer.js')
-    </script>
-  </body>
+
+<div class="main-screen">
+    <div class="main-menu">
+        <div class="ui vertical menu">
+
+        </div>
+    </div>
+    <div class="main-tabs">
+
+    </div>
+</div>
+
+
+<script>
+    const jQuery = require('jquery')
+    const $ = jQuery
+    require('./semantic/dist/semantic.min.js')
+
+
+    function renderApp() {
+        $('.menu').html(`
+            <div class="item">
+                <div class="ui transparent icon input">
+                    <input type="text" placeholder="Search mail...">
+                    <i class="search icon"></i>
+                </div>
+            </div>`);
+
+        $('.main-tabs').html(``);
+
+
+        const localTabs = JSON.parse(localStorage.getItem('tabs'));
+
+        const defaultTabs = [{
+            name: 'Google play',
+            src: 'https://play.google.com/music/listen#/home'
+        }, {
+            name: 'VK',
+            src: 'https://vk.com'
+        }, {
+            name: 'Yandex music',
+            src: 'https://music.yandex.ru/home'
+        }, {
+            name: 'Telegram',
+            src: 'https://xn--80affa3aja3an.xn--80asehdb/#/im?p=@vitodos'
+        }, {
+            name: 'Whatsapp',
+            src: 'https://web.whatsapp.com/'
+        }];
+
+        if (!localTabs) {
+            localStorage.setItem('tabs', JSON.stringify(defaultTabs))
+        }
+
+        const tabs = localTabs ? localTabs : defaultTabs;
+
+        let counter = 0;
+
+        tabs.forEach(tab => {
+            const active = counter === 0 ? 'active' : '';
+
+            $('.menu').append(`<a class="${active} teal item" data-tab="${counter}">
+                ${tab.name}
+                <!--<div class="ui teal left pointing label">1</div>-->
+            </a>`);
+
+            $('.main-tabs').append(`
+            <div class="ui bottom attached tab segment ${active}" data-tab="${counter}">
+                <webview src="${tab.src}" style="display:inline-flex; width:100%; height:100vh"></webview>
+            </div>`)
+
+            counter++;
+        });
+
+        $('.menu').append(`
+            <div class="item">
+                <button id="add-btn" class="ui positive button">
+                    <i class="plus icon"></i>
+                    Add
+                </button>
+                <button id="refresh-btn" class="ui primary button">
+                    <i class="refresh icon"></i>
+                    Refresh
+                </button>
+            </div>`);
+
+        $('#refresh-btn').click(() => {
+            localStorage.setItem('tabs', JSON.stringify(defaultTabs));
+            const remote = require('electron').remote;
+            remote.app.relaunch();
+            remote.app.exit(0);
+        });
+    }
+
+    renderApp();
+
+
+
+</script>
+<script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+    require('./src/menu/menu.js')
+</script>
+</body>
 </html>

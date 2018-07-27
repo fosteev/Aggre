@@ -1,0 +1,27 @@
+.main-screen {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+.main-menu {
+    display: flex;
+    flex: 1;
+}
+
+.main-tabs {
+    display: flex;
+    flex: 6;
+}
+
+.ui.vertical.menu {
+    width: 100%;
+}
+
+.ui.attached.segment {
+    padding: 0;
+}
+
+.menu > a > i:hover {
+    color: #ff002f;
+}
